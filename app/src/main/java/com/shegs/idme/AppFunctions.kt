@@ -1,19 +1,20 @@
 package com.shegs.idme
 
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Environment
 import android.provider.MediaStore
+import android.widget.Toast
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.FileProvider
 import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import java.io.File
 import java.io.FileOutputStream
-import java.io.IOException
+import java.io.OutputStream
 
 fun generateQRCode(text: String, size: Int): Bitmap {
     val barcodeEncoder = BarcodeEncoder()
@@ -21,9 +22,9 @@ fun generateQRCode(text: String, size: Int): Bitmap {
     return bitmap
 }
 
-fun shareQRCode(context: Context, qrBitmap: ImageBitmap) {
+fun shareQRCode(context: Context, qrCodeBitmap: ImageBitmap) {
 
-    val androidBitmap = qrBitmap.asAndroidBitmap()
+    val androidBitmap = qrCodeBitmap.asAndroidBitmap()
 
     val shareIntent = Intent(Intent.ACTION_SEND).apply {
         type = "image/png"
@@ -40,4 +41,38 @@ fun shareQRCode(context: Context, qrBitmap: ImageBitmap) {
     }
 
     context.startActivity(Intent.createChooser(shareIntent, "Share QR Code"))
+}
+
+
+fun saveQrCodeToGallery(context: Context, qrCodeBitmap: ImageBitmap, fileName: String): Boolean {
+    val androidBitmap = qrCodeBitmap.asAndroidBitmap()
+    val imageFileName = "$fileName.png"
+
+    // Check if external storage is available
+    if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
+        val imageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+        val imageFile = File(imageDir, imageFileName)
+
+        try {
+            val outputStream: OutputStream = FileOutputStream(imageFile)
+            androidBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+            outputStream.flush()
+            outputStream.close()
+
+            // Add the image to the device's gallery
+            val values = ContentValues().apply {
+                put(MediaStore.Images.Media.DISPLAY_NAME, imageFileName)
+                put(MediaStore.Images.Media.MIME_TYPE, "image/png")
+                put(MediaStore.Images.Media.DATE_ADDED, System.currentTimeMillis() / 1000)
+                put(MediaStore.Images.Media.DATA, imageFile.absolutePath)
+            }
+            context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+
+            return true
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    return false
 }
