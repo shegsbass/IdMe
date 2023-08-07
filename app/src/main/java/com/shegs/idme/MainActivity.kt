@@ -19,7 +19,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             IdMeTheme {
-                QRCodeScreen()
             }
         }
     }
