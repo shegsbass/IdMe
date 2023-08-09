@@ -1,11 +1,13 @@
 package com.shegs.idme
 
+import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Environment
+import android.provider.ContactsContract
 import android.provider.MediaStore
 import android.widget.Toast
 import androidx.compose.ui.graphics.ImageBitmap
@@ -65,6 +67,7 @@ fun saveQrCodeToGallery(context: Context, qrCodeBitmap: ImageBitmap, fileName: S
                 put(MediaStore.Images.Media.MIME_TYPE, "image/png")
                 put(MediaStore.Images.Media.DATE_ADDED, System.currentTimeMillis() / 1000)
                 put(MediaStore.Images.Media.DATA, imageFile.absolutePath)
+                Toast.makeText(context, "Saved to gallery", Toast.LENGTH_SHORT).show()
             }
             context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
 

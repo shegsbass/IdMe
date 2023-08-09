@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -22,57 +23,148 @@ import androidx.compose.ui.unit.dp
 @ExperimentalMaterial3Api
 @Composable
 fun InputInfo(onGenerateQRCode: (String) -> Unit) {
-    val context = LocalContext.current
 
     // Remember the values of the input fields
-    var fullNameState by remember { mutableStateOf(TextFieldValue()) }
-    var emailState by remember { mutableStateOf(TextFieldValue()) }
-    var phoneNumberState by remember { mutableStateOf(TextFieldValue()) }
+    var firstName by remember { mutableStateOf(TextFieldValue()) }
+    var lastName by remember { mutableStateOf(TextFieldValue()) }
+    var emailAddress by remember { mutableStateOf(TextFieldValue()) }
+    var homeAddress by remember { mutableStateOf(TextFieldValue()) }
+    var phoneNumber by remember { mutableStateOf(TextFieldValue()) }
+    var instagramHandle by remember { mutableStateOf(TextFieldValue()) }
+    var twitterHandle by remember { mutableStateOf(TextFieldValue()) }
+    var bio by remember { mutableStateOf(TextFieldValue()) }
+    var hobbies by remember { mutableStateOf(TextFieldValue()) }
+    var bankAccountName by remember { mutableStateOf(TextFieldValue()) }
+    var bankAccountNumber by remember { mutableStateOf(TextFieldValue()) }
+    var bankName by remember { mutableStateOf(TextFieldValue()) }
 
-    Column(
+
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Full Name
-        TextField(
-            value = fullNameState.text,
-            onValueChange = { fullNameState = fullNameState.copy(text = it) },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            placeholder = { Text("Full Name") }
-        )
+        item {
+            TextField(
+                value = firstName.text,
+                onValueChange = { firstName = firstName.copy(text = it) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                placeholder = { Text("First Name") }
+            )
 
-        // Email
-        TextField(
-            value = emailState.text,
-            onValueChange = { emailState = emailState.copy(text = it) },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            placeholder = { Text("Email") }
-        )
+            TextField(
+                value = lastName.text,
+                onValueChange = { lastName = lastName.copy(text = it) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                placeholder = { Text("Last Name") }
+            )
 
-        // Phone Number
-        TextField(
-            value = phoneNumberState.text,
-            onValueChange = { phoneNumberState = phoneNumberState.copy(text = it) },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            placeholder = { Text("Phone Number") }
-        )
+            TextField(
+                value = emailAddress.text,
+                onValueChange = { emailAddress = emailAddress.copy(text = it) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                placeholder = { Text("Email") }
+            )
 
-        Button(
-            onClick = {
-                val qrText = buildString {
-                    append("Full Name: ${fullNameState.text}\n")
-                    append("Email: ${emailState.text}\n")
-                    append("Phone Number: ${phoneNumberState.text}")
+            TextField(
+                value = homeAddress.text,
+                onValueChange = { homeAddress = homeAddress.copy(text = it) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                placeholder = { Text("Home Address") }
+            )
+
+
+            TextField(
+                value = phoneNumber.text,
+                onValueChange = { phoneNumber = phoneNumber.copy(text = it) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                placeholder = { Text("Phone Number") }
+            )
+
+            TextField(
+                value = instagramHandle.text,
+                onValueChange = { instagramHandle = instagramHandle.copy(text = it) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                placeholder = { Text("Instagram Handle") }
+            )
+
+            TextField(
+                value = twitterHandle.text,
+                onValueChange = { twitterHandle = twitterHandle.copy(text = it) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                placeholder = { Text("Twitter Handle") }
+            )
+
+            TextField(
+                value = bio.text,
+                onValueChange = { bio = bio.copy(text = it) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                placeholder = { Text("Bio") }
+            )
+
+            TextField(
+                value = hobbies.text,
+                onValueChange = { hobbies = hobbies.copy(text = it) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                placeholder = { Text("Hobbies/Interest") }
+            )
+
+            TextField(
+                value = bankAccountName.text,
+                onValueChange = { bankAccountName = bankAccountName.copy(text = it) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                placeholder = { Text("Bank Account Name") }
+            )
+
+            TextField(
+                value = bankAccountNumber.text,
+                onValueChange = { bankAccountNumber = bankAccountNumber.copy(text = it) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                placeholder = { Text("Bank Account Number") }
+            )
+
+            TextField(
+                value = bankName.text,
+                onValueChange = { bankName = bankName.copy(text = it) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                placeholder = { Text("Bank Name") }
+            )
+
+            Button(
+                onClick = {
+                    val qrText = buildString {
+                        append("First Name: ${firstName.text}\n")
+                        append("Last Name: ${lastName.text}\n")
+                        append("Email Address: ${emailAddress.text}")
+                        append("Home Address: ${homeAddress.text}")
+                        append("Phone Number: ${phoneNumber.text}")
+                        append("Instagram Handle: ${instagramHandle.text}")
+                        append("Twitter Handle: ${twitterHandle.text}")
+                        append("Bio: ${bio.text}")
+                        append("Hobbies: ${hobbies.text}")
+                        append("Bank Account Name: ${bankAccountName.text}")
+                        append("Bank Account Number: ${bankAccountNumber.text}")
+                        append("Bank Name: ${bankName.text}")
+                    }
+                    onGenerateQRCode(qrText)
                 }
-                onGenerateQRCode(qrText)
+            ) {
+                Text("Generate QR Code")
             }
-        ) {
-            Text("Generate QR Code")
         }
+
     }
 }
