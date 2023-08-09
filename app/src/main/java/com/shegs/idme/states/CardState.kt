@@ -10,5 +10,5 @@ data class CardState(
 
     val cardName: String = "",
 
-    val cardCreateDate: LocalDateTime
+    val timeStamp: LocalDateTime = LocalDateTime.now()
 )

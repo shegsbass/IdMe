@@ -7,7 +7,7 @@ import com.shegs.idme.model.info.InfoEntity
 
 interface CardDAO {
     @Insert
-    suspend fun insertCardInfo(card: CardEntity)
+    suspend fun insertCard(card: CardEntity)
 
     @Query("SELECT * FROM card_table ORDER BY timestamp DESC")
     suspend fun getAllCards(): List<CardEntity>
@@ -16,7 +16,7 @@ interface CardDAO {
     suspend fun getInformationByInformationId(infoId: Int): List<InfoEntity>
 
     @Delete
-    suspend fun deleteContact(card: CardEntity)
+    suspend fun deleteCard(card: CardEntity)
 
 }
 

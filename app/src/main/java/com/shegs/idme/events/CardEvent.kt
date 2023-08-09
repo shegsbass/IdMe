@@ -9,7 +9,7 @@ sealed interface CardEvent{
 
     data class SetCardName(val cardName: String): CardEvent
 
-    data class SetCardCreateDate(val cardCreateDate: LocalDateTime): CardEvent
+    data class SetTimeStamp(val timeStamp: LocalDateTime): CardEvent
 
     data class DeleteCard(val card: CardEntity): CardEvent
 }
