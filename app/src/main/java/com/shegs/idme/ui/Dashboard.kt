@@ -1,0 +1,88 @@
+package com.shegs.idme.ui
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.shegs.idme.events.CardEvent
+import com.shegs.idme.viewModels.CardViewModel
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DashboardScreen(viewModel: CardViewModel) {
+    val cardState = viewModel.cardState.collectAsState().value
+    val getAllCards by viewModel.getAllCards.collectAsState(emptyList())
+
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(onClick = {
+                viewModel.onEvent(CardEvent.ShowDialog)
+            }) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Add Card"
+                )
+            }
+        },
+        content = {_ ->
+            if (cardState.isAddingCard) {
+                AddCardDialog(viewModel = viewModel)
+            }
+            LazyColumn(
+                contentPadding = PaddingValues(16.dp),
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                items(getAllCards) { card ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .weight(1f)
+                        ) {
+                            Text(
+                                text = "${card.cardName}",
+                                fontSize = 20.sp
+                            )
+                            Text(
+                                text = "${card.createdAt}",
+                                fontSize = 12.sp
+                            )
+                        }
+                        IconButton(
+                            onClick = { viewModel.onEvent(CardEvent.DeleteCard(card)) }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = "Delete Card"
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    )
+}
+

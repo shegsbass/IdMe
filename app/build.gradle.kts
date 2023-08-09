@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id ("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -84,4 +85,9 @@ dependencies {
 
     // Add the Room ktx artifact for Coroutine support
     implementation ("androidx.room:room-ktx:$room_version")
+
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.5")
+
+    implementation ("com.google.dagger:hilt-android:2.45")
+    kapt ("com.google.dagger:hilt-android-compiler:2.45")
 }

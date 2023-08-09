@@ -1,14 +1,14 @@
 package com.shegs.idme.states
 
 import com.shegs.idme.model.card.CardEntity
-import java.time.LocalDateTime
+import java.util.Date
 
 data class CardState(
-    val cards: List<CardEntity> = emptyList(),
+    var cards: List<CardEntity> = emptyList(),
 
-    val isAddingCard: Boolean = false,
+    var isAddingCard: Boolean = false,
 
     val cardName: String = "",
 
-    val timeStamp: LocalDateTime = LocalDateTime.now()
+    val createdAt: Date
 )

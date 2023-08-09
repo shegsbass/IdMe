@@ -6,52 +6,78 @@ import com.shegs.idme.events.CardEvent
 import com.shegs.idme.model.card.CardDAO
 import com.shegs.idme.model.card.CardEntity
 import com.shegs.idme.states.CardState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
+import java.util.Date
+import javax.inject.Inject
 
-class CardViewModel(
+@HiltViewModel
+class CardViewModel @Inject constructor(
     private val cardDAO: CardDAO
-): ViewModel() {
-    private val _state = MutableStateFlow(CardState())
+) : ViewModel() {
+    val currentDate = Date()
+    private val _state = MutableStateFlow(CardState(createdAt = currentDate))
+    val cardState = _state
 
-    private val cardState = _state
+    private val _getAllCards = MutableStateFlow<List<CardEntity>>(emptyList())
+    val getAllCards: StateFlow<List<CardEntity>> = _getAllCards
 
-    fun onEvent(event: CardEvent){
-        when(event){
+    init {
+        fetchAllCards()
+    }
+
+    private fun fetchAllCards() {
+        viewModelScope.launch {
+            val cards = cardDAO.getAllCards()
+            _getAllCards.emit(cards)
+        }
+    }
+
+
+    fun onEvent(event: CardEvent) {
+        when (event) {
             is CardEvent.DeleteCard -> {
                 viewModelScope.launch {
                     cardDAO.deleteCard(event.card)
+                    fetchAllCards()
                 }
             }
 
             CardEvent.SaveCard -> {
                 val cardName = cardState.value.cardName
 
-                if (cardName.isBlank()){
+                if (cardName.isBlank()) {
                     return
                 }
                 val card = CardEntity(
                     cardName = cardName,
-                    timestamp = LocalDateTime.now()
+                    createdAt = LocalDateTime.now()
                 )
                 viewModelScope.launch {
                     cardDAO.insertCard(card)
+                    fetchAllCards()
+                    cardState.update { it.copy(isAddingCard = false) }
                 }
             }
 
             is CardEvent.SetCardName -> {
-                cardState.update { it.copy(
-                    cardName = event.cardName
-                )
-                }
+                cardState.update { it.copy(cardName = event.cardName) }
             }
 
             is CardEvent.SetTimeStamp -> {
-                cardState.update { it.copy(
-                    timeStamp = event.timeStamp
-                ) }
+                cardState.update { it.copy(createdAt = event.createdAt) }
+            }
+
+            CardEvent.ShowDialog -> {
+                cardState.update { it.copy(isAddingCard = true) }
+            }
+
+            CardEvent.HideDialog -> {
+                cardState.update { it.copy(isAddingCard = false) }
             }
         }
     }
