@@ -10,6 +10,6 @@ interface InfoDAO {
     @Upsert
     suspend fun insertInfo(info: InfoEntity)
 
-    @Query("SELECT * FROM information_table WHERE info_id = :infoId ORDER BY timestamp DESC")
-    suspend fun getInfoByInfoId(infoId: Int): List<InfoEntity>
+    @Query("SELECT * FROM information_table WHERE info_id = :infoId")
+    suspend fun getInfoByInfoId(infoId: Int): InfoEntity?
 }

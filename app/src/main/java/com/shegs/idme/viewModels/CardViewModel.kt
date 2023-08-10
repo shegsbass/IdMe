@@ -79,6 +79,8 @@ class CardViewModel @Inject constructor(
             CardEvents.HideDialog -> {
                 cardState.update { it.copy(isAddingCard = false) }
             }
+
+            else -> {}
         }
     }
 }

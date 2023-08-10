@@ -11,8 +11,8 @@ import java.time.LocalDateTime
 @TypeConverters(DateConverter::class)
 data class InfoEntity(
 
-    @PrimaryKey(autoGenerate = true) val id: Int,
-    @ColumnInfo(name = "info_id") val infoId: Int,
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "info_id") val infoId: Int = 0,
     @ColumnInfo(name = "first_name") val firstName: String?,
     @ColumnInfo(name = "last_name") val lastName: String?,
     @ColumnInfo(name = "email_address") val emailAddress: String?,
