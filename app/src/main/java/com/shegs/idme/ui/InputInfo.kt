@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun InputInfoScreen(cardName: String, onGenerateQRCode: (String) -> Unit) {
 
+
     // Remember the values of the input fields
     var firstName by remember { mutableStateOf(TextFieldValue()) }
     var lastName by remember { mutableStateOf(TextFieldValue()) }

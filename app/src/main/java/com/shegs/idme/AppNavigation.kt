@@ -42,7 +42,6 @@ fun AppNavigation(navController: NavHostController) {
             }
         }
 
-
         composable(
             "display/{qrText}",
             arguments = listOf(navArgument("qrText") { type = NavType.StringType })
@@ -52,5 +51,6 @@ fun AppNavigation(navController: NavHostController) {
             val imageBitmap: ImageBitmap = (bitmap.asImageBitmap())
             DisplayQRScreen(imageBitmap)
         }
+
     }
 }

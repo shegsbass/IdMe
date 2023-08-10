@@ -37,40 +37,28 @@ class InfoViewModel @Inject constructor(
 
     fun onEvent(event: InfoEvents){
         when (event){
-            is InfoEvents.SaveInfo -> {
-                val firstName = infoState.value.firstName
-                val lastName = infoState.value.lastName
-                val email = infoState.value.emailAddress
-                val homeAddress = infoState.value.homeAddress
-                val phoneNumber = infoState.value.phoneNumber
-                val instagramHandle = infoState.value.instagramHandle
-                val twitterHandle = infoState.value.twitterHandle
-                val bio = infoState.value.bio
-                val hobbies = infoState.value.hobbies
-                val bankAccountName = infoState.value.bankAccountName
-                val bankAccountNumber = infoState.value.bankAccountNumber
-                val bankName = infoState.value.bankName
-                val qrCodeImageBitmap = infoState.value.qrcodeImage
+            is InfoEvents.SaveUserInput -> {
+                val userInfo = event.userInput
 
                 // Convert Bitmap to ByteArray
                 val outputStream = ByteArrayOutputStream()
-                qrCodeImageBitmap?.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+                userInfo.qrCodeImageBitmap?.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
                 val qrCodeImage = outputStream.toByteArray()
 
 
                 val information = InfoEntity(
-                    firstName = firstName,
-                    lastName = lastName,
-                    emailAddress = email,
-                    homeAddress = homeAddress,
-                    phoneNumber = phoneNumber,
-                    instagramHandle = instagramHandle,
-                    twitterHandle = twitterHandle,
-                    bio = bio,
-                    hobbies = hobbies,
-                    bankAccountName = bankAccountName,
-                    bankAccountNumber = bankAccountNumber,
-                    bankName = bankName,
+                    firstName = userInfo.firstName,
+                    lastName = userInfo.lastName,
+                    emailAddress = userInfo.emailAddress,
+                    homeAddress = userInfo.homeAddress,
+                    phoneNumber = userInfo.phoneNumber,
+                    instagramHandle = userInfo.instagramHandle,
+                    twitterHandle = userInfo.twitterHandle,
+                    bio = userInfo.bio,
+                    hobbies = userInfo.hobbies,
+                    bankAccountName = userInfo.bankAccountName,
+                    bankAccountNumber = userInfo.bankAccountNumber,
+                    bankName = userInfo.bankName,
                     qrCodeImage = qrCodeImage,
                     createdAt = LocalDateTime.now()
                 )
@@ -80,62 +68,26 @@ class InfoViewModel @Inject constructor(
                 }
             }
 
-            is InfoEvents.SetFirstName -> {
-                infoState.update { it.copy(firstName = event.firstName) }
+            is InfoEvents.SetUserInput -> {
+                val userInput = event.setInput
+                infoState.update { it.copy(
+                    firstName = userInput.firstName,
+                    lastName = userInput.lastName,
+                    emailAddress = userInput.emailAddress,
+                    homeAddress = userInput.homeAddress,
+                    phoneNumber = userInput.phoneNumber,
+                    instagramHandle = userInput.instagramHandle,
+                    twitterHandle = userInput.twitterHandle,
+                    bio = userInput.bio,
+                    hobbies = userInput.hobbies,
+                    bankAccountName = userInput.bankAccountName,
+                    bankAccountNumber = userInput.bankAccountNumber,
+                    bankName = userInput.bankName,
+                    qrcodeImage = userInput.qrCodeImageBitmap,
+                    createdAt = userInput.createdAt
+                )
+                }
             }
-
-            is InfoEvents.SetLastName -> {
-                infoState.update { it.copy(lastName = event.lastName) }
-            }
-
-            is InfoEvents.SetEmailAddress -> {
-                infoState.update { it.copy(emailAddress = event.emailAddress) }
-            }
-
-            is InfoEvents.SetHomeAddress -> {
-                infoState.update { it.copy(homeAddress = event.homeAddress) }
-            }
-
-            is InfoEvents.SetPhoneNumber -> {
-                infoState.update { it.copy(phoneNumber = event.phoneNumber) }
-            }
-
-            is InfoEvents.SetInstagramHandle -> {
-                infoState.update { it.copy(instagramHandle = event.instagramHandle) }
-            }
-
-            is InfoEvents.SetTwitterHandle -> {
-                infoState.update { it.copy(twitterHandle = event.twitterHandle) }
-            }
-
-            is InfoEvents.SetBio -> {
-                infoState.update { it.copy(bio = event.bio) }
-            }
-
-            is InfoEvents.SetHobbies -> {
-                infoState.update { it.copy(hobbies = event.hobbies) }
-            }
-
-            is InfoEvents.SetBankAccountName -> {
-                infoState.update { it.copy(bankAccountName = event.bankAccountName) }
-            }
-
-            is InfoEvents.SetBankAccountNumber -> {
-                infoState.update { it.copy(bankAccountNumber = event.bankAccountNumber) }
-            }
-
-            is InfoEvents.SetBankName -> {
-                infoState.update { it.copy(bankName = event.bankName) }
-            }
-
-            is InfoEvents.GeneratedQRCOde -> {
-                infoState.update { it.copy(qrcodeImage = event.qrCodeImage) }
-            }
-
-            is InfoEvents.CreatedAt -> {
-                infoState.update { it.copy(createdAt = event.createdAt) }
-            }
-
         }
     }
 
