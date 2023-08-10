@@ -28,12 +28,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.shegs.idme.events.CardEvents
 import com.shegs.idme.viewModels.CardViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashboardScreen(viewModel: CardViewModel) {
+fun DashboardScreen(viewModel: CardViewModel, navController: NavController) {
     val cardState = viewModel.cardState.collectAsState().value
     val getAllCards by viewModel.getAllCards.collectAsState(emptyList())
 
@@ -50,7 +51,13 @@ fun DashboardScreen(viewModel: CardViewModel) {
         },
         content = {_ ->
             if (cardState.isAddingCard) {
-                AddCardDialog(viewModel = viewModel)
+                AddCardDialog(
+                    viewModel = viewModel,
+                    navController = navController,
+                    onCardCreated = { cardName ->
+                        // Navigate to the input info screen and pass the card name
+                        navController.navigate("input/$cardName")
+                    })
             }
             LazyColumn(
                 contentPadding = PaddingValues(16.dp),

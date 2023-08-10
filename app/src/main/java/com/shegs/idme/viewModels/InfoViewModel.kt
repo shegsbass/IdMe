@@ -23,10 +23,10 @@ class InfoViewModel @Inject constructor(
 ): ViewModel() {
     private val currentDate = Date()
     private val _state = MutableStateFlow(InfoState(createdAt = currentDate))
-    private val infoState = _state
+    val infoState = _state
 
     private val _getInfoById = MutableStateFlow<InfoEntity?>(null)
-    private val getInfoById: StateFlow<InfoEntity?> = _getInfoById
+     val getInfoById: StateFlow<InfoEntity?> = _getInfoById
 
     private fun fetchInfoById(infoId: Int){
         viewModelScope.launch {

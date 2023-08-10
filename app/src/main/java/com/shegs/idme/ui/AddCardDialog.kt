@@ -14,6 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.shegs.idme.events.CardEvents
 import com.shegs.idme.viewModels.CardViewModel
 
@@ -21,6 +22,8 @@ import com.shegs.idme.viewModels.CardViewModel
 @Composable
 fun AddCardDialog(
     viewModel: CardViewModel,
+    navController: NavController,
+    onCardCreated: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val cardState = viewModel.cardState.collectAsState().value
@@ -53,7 +56,11 @@ fun AddCardDialog(
                 contentAlignment = Alignment.CenterEnd
             ) {
                 Button(
-                    onClick = { viewModel.onEvent (CardEvents.SaveCard) }
+                    onClick = {
+                        viewModel.onEvent(CardEvents.SaveCard)
+                        onCardCreated(cardState.cardName)
+                        navController.navigate("input/${cardState.cardName}") // Use the correct route name
+                    }
                 ) {
                     Text(text = "Create Card")
                 }

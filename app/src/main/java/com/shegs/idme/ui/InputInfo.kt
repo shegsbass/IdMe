@@ -1,7 +1,6 @@
-package com.shegs.idme
+package com.shegs.idme.ui
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,13 +15,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @ExperimentalMaterial3Api
 @Composable
-fun InputInfo(onGenerateQRCode: (String) -> Unit) {
+fun InputInfoScreen(cardName: String, onGenerateQRCode: (String) -> Unit) {
 
     // Remember the values of the input fields
     var firstName by remember { mutableStateOf(TextFieldValue()) }
@@ -46,6 +46,13 @@ fun InputInfo(onGenerateQRCode: (String) -> Unit) {
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item {
+            Text(
+                text = "Create QR for $cardName", // Display the card name as the title
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp,
+                modifier = Modifier.padding(16.dp)
+            )
+
             TextField(
                 value = firstName.text,
                 onValueChange = { firstName = firstName.copy(text = it) },
