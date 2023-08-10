@@ -12,5 +12,6 @@ import java.time.LocalDateTime
 data class CardEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "card_name") val cardName: String,
-    @ColumnInfo(name = "createdAt") val createdAt: LocalDateTime?
+    @ColumnInfo(name = "createdAt") val createdAt: LocalDateTime?,
+    @ColumnInfo(name = "info_id") val infoId: Int = 0
 )

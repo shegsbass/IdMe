@@ -17,7 +17,7 @@ data class InfoEntity(
     @ColumnInfo(name = "last_name") val lastName: String?,
     @ColumnInfo(name = "email_address") val emailAddress: String?,
     @ColumnInfo(name = "home_address") val homeAddress: String?,
-    @ColumnInfo(name = "phone_number") val phoneNumber: String?,
+    @ColumnInfo(name = "phone_number") val phoneNumber: Int?,
     @ColumnInfo(name = "instagram_handle") val instagramHandle: String?,
     @ColumnInfo(name = "twitter_handle") val twitterHandle: String?,
     @ColumnInfo(name = "bio") val bio: String?,

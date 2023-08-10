@@ -26,6 +26,14 @@ class CardViewModel @Inject constructor(
     private val _getAllCards = MutableStateFlow<List<CardEntity>>(emptyList())
     val getAllCards: StateFlow<List<CardEntity>> = _getAllCards
 
+    private val _selectedCard = MutableStateFlow<CardEntity?>(null)
+    val selectedCard: StateFlow<CardEntity?> = _selectedCard
+
+
+    fun onCardClicked(card: CardEntity) {
+        _selectedCard.value = card
+    }
+
     init {
         fetchAllCards()
     }

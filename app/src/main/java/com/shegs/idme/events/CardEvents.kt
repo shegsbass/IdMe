@@ -16,4 +16,5 @@ sealed interface CardEvents{
     data class SetTimeStamp(val createdAt: Date): CardEvents
 
     data class DeleteCard(val card: CardEntity): CardEvents
+
 }
