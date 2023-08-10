@@ -14,7 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.shegs.idme.events.CardEvent
+import com.shegs.idme.events.CardEvents
 import com.shegs.idme.viewModels.CardViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -27,7 +27,7 @@ fun AddCardDialog(
 
     AlertDialog(
         modifier = modifier,
-        onDismissRequest = { viewModel.onEvent(CardEvent.HideDialog) },
+        onDismissRequest = { viewModel.onEvent(CardEvents.HideDialog) },
         title = {
                 Text(text = "Create Your Card")
         },
@@ -38,7 +38,7 @@ fun AddCardDialog(
                 TextField(
                     value = cardState.cardName,
                     onValueChange = {
-                        viewModel.onEvent(CardEvent.SetCardName(it))
+                        viewModel.onEvent(CardEvents.SetCardName(it))
                     },
                     placeholder = {
                         Text(text = "Personal Info")
@@ -53,7 +53,7 @@ fun AddCardDialog(
                 contentAlignment = Alignment.CenterEnd
             ) {
                 Button(
-                    onClick = { viewModel.onEvent (CardEvent.SaveCard) }
+                    onClick = { viewModel.onEvent (CardEvents.SaveCard) }
                 ) {
                     Text(text = "Create Card")
                 }

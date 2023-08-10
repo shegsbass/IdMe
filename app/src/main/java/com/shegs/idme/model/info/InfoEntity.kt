@@ -3,9 +3,12 @@ package com.shegs.idme.model.info
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+import com.shegs.idme.utils.DateConverter
 import java.time.LocalDateTime
 
 @Entity(tableName = "information_table")
+@TypeConverters(DateConverter::class)
 data class InfoEntity(
 
     @PrimaryKey(autoGenerate = true) val id: Int,
@@ -24,6 +27,21 @@ data class InfoEntity(
     @ColumnInfo(name = "bank_name") val bankName: String?,
 
     @ColumnInfo(name = "qrcode_image") val qrCodeImage: ByteArray,
-    @ColumnInfo(name = "timestamp") val timestamp: LocalDateTime = LocalDateTime.now()
+    @ColumnInfo(name = "createdAt") val createdAt: LocalDateTime?
 
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as InfoEntity
+
+        if (!qrCodeImage.contentEquals(other.qrCodeImage)) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return qrCodeImage.contentHashCode()
+    }
+}

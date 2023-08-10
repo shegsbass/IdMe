@@ -2,7 +2,7 @@ package com.shegs.idme.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.shegs.idme.events.CardEvent
+import com.shegs.idme.events.CardEvents
 import com.shegs.idme.model.card.CardEntity
 import com.shegs.idme.repositories.CardRepository
 import com.shegs.idme.states.CardState
@@ -38,16 +38,16 @@ class CardViewModel @Inject constructor(
     }
 
 
-    fun onEvent(event: CardEvent) {
+    fun onEvent(event: CardEvents) {
         when (event) {
-            is CardEvent.DeleteCard -> {
+            is CardEvents.DeleteCard -> {
                 viewModelScope.launch {
                     cardRepository.deleteCard(event.card)
                     fetchAllCards()
                 }
             }
 
-            CardEvent.SaveCard -> {
+            CardEvents.SaveCard -> {
                 val cardName = cardState.value.cardName
 
                 if (cardName.isBlank()) {
@@ -64,19 +64,19 @@ class CardViewModel @Inject constructor(
                 }
             }
 
-            is CardEvent.SetCardName -> {
+            is CardEvents.SetCardName -> {
                 cardState.update { it.copy(cardName = event.cardName) }
             }
 
-            is CardEvent.SetTimeStamp -> {
+            is CardEvents.SetTimeStamp -> {
                 cardState.update { it.copy(createdAt = event.createdAt) }
             }
 
-            CardEvent.ShowDialog -> {
+            CardEvents.ShowDialog -> {
                 cardState.update { it.copy(isAddingCard = true) }
             }
 
-            CardEvent.HideDialog -> {
+            CardEvents.HideDialog -> {
                 cardState.update { it.copy(isAddingCard = false) }
             }
         }

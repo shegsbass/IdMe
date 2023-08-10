@@ -28,7 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.shegs.idme.events.CardEvent
+import com.shegs.idme.events.CardEvents
 import com.shegs.idme.viewModels.CardViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,7 +40,7 @@ fun DashboardScreen(viewModel: CardViewModel) {
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                viewModel.onEvent(CardEvent.ShowDialog)
+                viewModel.onEvent(CardEvents.ShowDialog)
             }) {
                 Icon(
                     imageVector = Icons.Default.Add,
@@ -83,7 +83,7 @@ fun DashboardScreen(viewModel: CardViewModel) {
                                 horizontalArrangement = Arrangement.End
                             ) {
                                 IconButton(
-                                    onClick = { viewModel.onEvent(CardEvent.DeleteCard(card)) }
+                                    onClick = { viewModel.onEvent(CardEvents.DeleteCard(card)) }
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.Delete,
