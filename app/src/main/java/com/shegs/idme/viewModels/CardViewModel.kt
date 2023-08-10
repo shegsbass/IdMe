@@ -3,8 +3,8 @@ package com.shegs.idme.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shegs.idme.events.CardEvent
-import com.shegs.idme.model.card.CardDAO
 import com.shegs.idme.model.card.CardEntity
+import com.shegs.idme.repositories.CardRepository
 import com.shegs.idme.states.CardState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CardViewModel @Inject constructor(
-    private val cardDAO: CardDAO
+    private val cardRepository: CardRepository
 ) : ViewModel() {
     val currentDate = Date()
     private val _state = MutableStateFlow(CardState(createdAt = currentDate))
@@ -32,7 +32,7 @@ class CardViewModel @Inject constructor(
 
     private fun fetchAllCards() {
         viewModelScope.launch {
-            val cards = cardDAO.getAllCards()
+            val cards = cardRepository.getAllCards()
             _getAllCards.emit(cards)
         }
     }
@@ -42,7 +42,7 @@ class CardViewModel @Inject constructor(
         when (event) {
             is CardEvent.DeleteCard -> {
                 viewModelScope.launch {
-                    cardDAO.deleteCard(event.card)
+                    cardRepository.deleteCard(event.card)
                     fetchAllCards()
                 }
             }
@@ -58,7 +58,7 @@ class CardViewModel @Inject constructor(
                     createdAt = LocalDateTime.now()
                 )
                 viewModelScope.launch {
-                    cardDAO.insertCard(card)
+                    cardRepository.insertCard(card)
                     fetchAllCards()
                     cardState.update { it.copy(isAddingCard = false) }
                 }

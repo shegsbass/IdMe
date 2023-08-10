@@ -1,12 +1,11 @@
 package com.shegs.idme.database
 
-import android.content.Context
 import androidx.room.Database
-import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.shegs.idme.model.card.CardDAO
 import com.shegs.idme.model.card.CardEntity
+import com.shegs.idme.model.info.InfoDAO
 import com.shegs.idme.model.info.InfoEntity
 import com.shegs.idme.utils.DateConverter
 import com.shegs.idme.utils.LocalDateTimeConverter
@@ -16,21 +15,7 @@ import com.shegs.idme.utils.LocalDateTimeConverter
 
 abstract class AppDatabase : RoomDatabase() {
     abstract fun cardDAO() : CardDAO
+    abstract fun InfoDAO() : InfoDAO
 
-    companion object{
-        @Volatile
-        private var INSTANCE: AppDatabase? = null
 
-        fun getDatabase(context: Context): AppDatabase {
-            return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    AppDatabase::class.java,
-                    "app_database"
-                ).build()
-                INSTANCE = instance
-                instance
-            }
-        }
-    }
 }

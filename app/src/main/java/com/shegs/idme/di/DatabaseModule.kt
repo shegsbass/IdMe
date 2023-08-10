@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.shegs.idme.database.AppDatabase
 import com.shegs.idme.model.card.CardDAO
+import com.shegs.idme.model.info.InfoDAO
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,5 +25,10 @@ object DatabaseModule {
     @Provides
     fun provideCardDAO(database: AppDatabase): CardDAO {
         return database.cardDAO()
+    }
+
+    @Provides
+    fun provideInfoDAO(database: AppDatabase): InfoDAO {
+        return database.InfoDAO()
     }
 }
