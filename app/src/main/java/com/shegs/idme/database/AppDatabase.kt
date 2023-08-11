@@ -10,12 +10,11 @@ import com.shegs.idme.model.info.InfoEntity
 import com.shegs.idme.utils.DateConverter
 import com.shegs.idme.utils.LocalDateTimeConverter
 
-@Database(entities = [CardEntity::class, InfoEntity::class], version = 1, exportSchema = false)
+@Database(entities = [CardEntity::class, InfoEntity::class], version = 2, exportSchema = false)
 @TypeConverters(DateConverter::class, LocalDateTimeConverter::class)
 
 abstract class AppDatabase : RoomDatabase() {
     abstract fun cardDAO() : CardDAO
     abstract fun InfoDAO() : InfoDAO
-
 
 }

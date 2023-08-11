@@ -19,10 +19,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.shegs.idme.events.InfoEvents
+import com.shegs.idme.viewModels.InfoViewModel
 
 @ExperimentalMaterial3Api
 @Composable
-fun InputInfoScreen(cardName: String, onGenerateQRCode: (String) -> Unit) {
+fun InputInfoScreen(
+    cardName: String,
+    onGenerateQRCode: (String) -> Unit,
+    infoViewModel: InfoViewModel
+) {
 
 
     // Remember the values of the input fields
@@ -151,8 +157,26 @@ fun InputInfoScreen(cardName: String, onGenerateQRCode: (String) -> Unit) {
                 placeholder = { Text("Bank Name") }
             )
 
+
             Button(
                 onClick = {
+
+                    val userInfo = InfoEvents.UserInfo(
+                        firstName = firstName.text,
+                        lastName = lastName.text,
+                        emailAddress = emailAddress.text,
+                        homeAddress = homeAddress.text,
+                        phoneNumber = phoneNumber.text,
+                        instagramHandle = instagramHandle.text,
+                        twitterHandle = twitterHandle.text,
+                        bio = bio.text,
+                        hobbies = hobbies.text,
+                        bankAccountName = bankAccountName.text,
+                        bankAccountNumber = bankAccountNumber.text,
+                        bankName = bankName.text,
+                        qrCodeImageBitmap = null // Set this to the actual Bitmap if you have it
+                    )
+
                     val qrText = buildString {
                         append("First Name: ${firstName.text}\n")
                         append("Last Name: ${lastName.text}\n")
@@ -167,7 +191,12 @@ fun InputInfoScreen(cardName: String, onGenerateQRCode: (String) -> Unit) {
                         append("Bank Account Number: ${bankAccountNumber.text}")
                         append("Bank Name: ${bankName.text}")
                     }
+
                     onGenerateQRCode(qrText)
+
+                    infoViewModel.onEvent(InfoEvents.SaveUserInput(userInfo))
+
+
                 }
             ) {
                 Text("Generate QR Code")

@@ -4,6 +4,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -15,6 +16,7 @@ import com.shegs.idme.ui.DisplayQRScreen
 import com.shegs.idme.ui.InputInfoScreen
 import com.shegs.idme.utils.generateQRCode
 import com.shegs.idme.viewModels.CardViewModel
+import com.shegs.idme.viewModels.InfoViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,15 +34,19 @@ fun AppNavigation(navController: NavHostController) {
             )
         }
 
-        composable("input/{cardName}", // Use "input/{cardName}" as the route name
+        composable(
+            "input/{cardName}",
             arguments = listOf(navArgument("cardName") { type = NavType.StringType })
         ) { backStackEntry ->
             val cardName = backStackEntry.arguments?.getString("cardName") ?: ""
-            InputInfoScreen(cardName = cardName) { qrText ->
-                // Navigate to the display QR code screen and pass the QR text
+            val infoViewModel: InfoViewModel = hiltViewModel()
+            InputInfoScreen(cardName = cardName, infoViewModel = infoViewModel, onGenerateQRCode = { userInfo ->
+                val qrText = generateQRCode(userInfo)
                 navController.navigate("display/$qrText")
-            }
+            })
         }
+
+
 
         composable(
             "display/{qrText}",

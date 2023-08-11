@@ -31,4 +31,5 @@ object DatabaseModule {
     fun provideInfoDAO(database: AppDatabase): InfoDAO {
         return database.InfoDAO()
     }
+
 }

@@ -16,7 +16,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
 
-fun generateQRCode(text: String, size: Int): Bitmap {
+fun generateQRCode(text: String, size: Int = 300): Bitmap {
     val barcodeEncoder = BarcodeEncoder()
     val bitmap = barcodeEncoder.encodeBitmap(text, BarcodeFormat.QR_CODE, size, size)
     return bitmap
