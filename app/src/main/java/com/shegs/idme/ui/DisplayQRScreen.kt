@@ -24,7 +24,7 @@ import com.shegs.idme.utils.saveQrCodeToGallery
 import com.shegs.idme.utils.shareQRCode
 
 @Composable
-fun DisplayQRScreen(qrCodeBitmap: ImageBitmap, ) {
+fun DisplayQRScreen(qrCodeBitmap: ImageBitmap ) {
 
     Box(
         modifier = Modifier

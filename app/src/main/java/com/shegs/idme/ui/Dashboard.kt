@@ -98,6 +98,11 @@ fun DashboardScreen(viewModel: CardViewModel, navController: NavController) {
                                     )
                                 }
                             }
+
+                            card.onClick{
+                                viewModel.onCardClicked(card)
+                                navController.navigate("info/${card.infoId}")
+                            }
                         }
                     }
                 }
