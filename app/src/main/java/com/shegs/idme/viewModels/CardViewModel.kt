@@ -5,9 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.shegs.idme.events.CardEvents
 import com.shegs.idme.model.card.CardEntity
 import com.shegs.idme.repositories.CardRepository
+import com.shegs.idme.repositories.InfoRepository
 import com.shegs.idme.states.CardState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -17,11 +20,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CardViewModel @Inject constructor(
-    private val cardRepository: CardRepository
+    private val cardRepository: CardRepository,
+    private val infoViewModel: InfoViewModel,
+    private val infoRepository: InfoRepository
 ) : ViewModel() {
     val currentDate = Date()
     private val _state = MutableStateFlow(CardState(createdAt = currentDate))
     val cardState = _state
+
+    private val _cardCreationStatus = MutableStateFlow(false)
+    val cardCreationStatus: StateFlow<Boolean> = _cardCreationStatus
 
     private val _getAllCards = MutableStateFlow<List<CardEntity>>(emptyList())
     val getAllCards: StateFlow<List<CardEntity>> = _getAllCards
@@ -29,9 +37,17 @@ class CardViewModel @Inject constructor(
     private val _selectedCard = MutableStateFlow<CardEntity?>(null)
     val selectedCard: StateFlow<CardEntity?> = _selectedCard
 
+    private val _eventNavigateToInfoDetails = MutableSharedFlow<Int>()
+    val eventNavigateToInfoDetails: SharedFlow<Int> = _eventNavigateToInfoDetails
+
 
     fun onCardClicked(card: CardEntity) {
-        _selectedCard.value = card
+        viewModelScope.launch {
+            val infoEntity = infoRepository.getInfoByInfoId(card.infoId)
+            infoEntity?.let {
+                _eventNavigateToInfoDetails.emit(infoEntity.infoId)
+            }
+        }
     }
 
     init {
@@ -46,7 +62,7 @@ class CardViewModel @Inject constructor(
     }
 
 
-    fun onEvent(event: CardEvents) {
+    suspend fun onEvent(event: CardEvents) {
         when (event) {
             is CardEvents.DeleteCard -> {
                 viewModelScope.launch {
@@ -61,14 +77,22 @@ class CardViewModel @Inject constructor(
                 if (cardName.isBlank()) {
                     return
                 }
-                val card = CardEntity(
-                    cardName = cardName,
-                    createdAt = LocalDateTime.now()
-                )
+
                 viewModelScope.launch {
-                    cardRepository.insertCard(card)
-                    fetchAllCards()
-                    cardState.update { it.copy(isAddingCard = false) }
+                    infoViewModel.getInfoById.collect { infoEntity ->
+                        infoEntity?.let {
+                            val card = CardEntity(
+                                cardName = cardName,
+                                infoId = it.infoId, // Use the infoId obtained from the InfoViewModel
+                                createdAt = LocalDateTime.now()
+                            )
+                            cardRepository.insertCard(card)
+                            fetchAllCards()
+                            cardState.update { it.copy(isAddingCard = false) }
+
+                            _cardCreationStatus.value = true
+                        }
+                    }
                 }
             }
 

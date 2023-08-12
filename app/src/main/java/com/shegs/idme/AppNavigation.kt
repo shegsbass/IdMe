@@ -2,10 +2,11 @@ package com.shegs.idme
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -13,6 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.shegs.idme.ui.DashboardScreen
 import com.shegs.idme.ui.DisplayQRScreen
+import com.shegs.idme.ui.InfoDetailsScreen
 import com.shegs.idme.ui.InputInfoScreen
 import com.shegs.idme.utils.generateQRCode
 import com.shegs.idme.viewModels.CardViewModel
@@ -21,7 +23,7 @@ import com.shegs.idme.viewModels.InfoViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppNavigation(navController: NavHostController) {
-    val viewModel: CardViewModel = viewModel()
+    val viewModel: CardViewModel = hiltViewModel()
 
     NavHost(
         navController = navController,
@@ -46,8 +48,6 @@ fun AppNavigation(navController: NavHostController) {
             })
         }
 
-
-
         composable(
             "display/{qrText}",
             arguments = listOf(navArgument("qrText") { type = NavType.StringType })
@@ -58,5 +58,23 @@ fun AppNavigation(navController: NavHostController) {
             DisplayQRScreen(imageBitmap)
         }
 
+        composable(
+            "info/{infoId}",
+            arguments = listOf(navArgument("infoId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val infoId = backStackEntry.arguments?.getInt("infoId") ?: 0
+            val infoViewModel: InfoViewModel = hiltViewModel()
+
+            val infoState by infoViewModel.infoState.collectAsState()
+
+            // Fetch info details if not already fetched
+            if (infoState == null) {
+                infoViewModel.fetchInfoById(infoId)
+            }
+
+            infoState?.let {
+                InfoDetailsScreen(infoId = infoId, viewModel = infoViewModel)
+            }
+        }
     }
 }

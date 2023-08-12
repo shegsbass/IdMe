@@ -10,7 +10,7 @@ class InfoRepository @Inject constructor(private val infoDAO: InfoDAO) {
         infoDAO.insertInfo(info)
     }
 
-    suspend fun getInfoByInfoId(infoID: Int): InfoEntity?{
-        return infoDAO.getInfoByInfoId(infoID)
+    suspend fun getInfoByInfoId(infoId: Int): InfoEntity? {
+        return infoDAO.getInfoByInfoId(infoId)
     }
 }

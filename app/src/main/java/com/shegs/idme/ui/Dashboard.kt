@@ -1,5 +1,6 @@
 package com.shegs.idme.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -24,24 +25,27 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.shegs.idme.events.CardEvents
 import com.shegs.idme.viewModels.CardViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(viewModel: CardViewModel, navController: NavController) {
     val cardState = viewModel.cardState.collectAsState().value
-    val getAllCards by viewModel.getAllCards.collectAsState(emptyList())
 
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                viewModel.onEvent(CardEvents.ShowDialog)
+                viewModel.viewModelScope.launch {
+                    viewModel.onEvent(CardEvents.ShowDialog)
+                }
+
             }) {
                 Icon(
                     imageVector = Icons.Default.Add,
@@ -59,18 +63,24 @@ fun DashboardScreen(viewModel: CardViewModel, navController: NavController) {
                         navController.navigate("input/$cardName")
                     })
             }
+            val cards = viewModel.getAllCards.collectAsState(initial = emptyList()).value
+
             LazyColumn(
                 contentPadding = PaddingValues(16.dp),
                 modifier = Modifier
                     .fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                items(getAllCards) { card ->
+                items(cards) { card ->
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(8.dp),
-                        elevation = CardDefaults.cardElevation(4.dp)
+                            .padding(8.dp)
+                            .clickable {
+                                    viewModel.onCardClicked(card) // Notify ViewModel about card click
+                                    navController.navigate("info/${card.infoId}") // Navigate to InfoDetailsScreen
+                            },
+                        elevation = CardDefaults.cardElevation(4.dp),
                     ) {
                         Column(
                             modifier = Modifier
@@ -90,7 +100,10 @@ fun DashboardScreen(viewModel: CardViewModel, navController: NavController) {
                                 horizontalArrangement = Arrangement.End
                             ) {
                                 IconButton(
-                                    onClick = { viewModel.onEvent(CardEvents.DeleteCard(card)) }
+                                    onClick = { viewModel.viewModelScope.launch {
+                                        viewModel.onEvent(CardEvents.DeleteCard(card)) }
+                                    }
+
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.Delete,
@@ -99,10 +112,6 @@ fun DashboardScreen(viewModel: CardViewModel, navController: NavController) {
                                 }
                             }
 
-                            card.onClick{
-                                viewModel.onCardClicked(card)
-                                navController.navigate("info/${card.infoId}")
-                            }
                         }
                     }
                 }

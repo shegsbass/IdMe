@@ -28,7 +28,7 @@ class InfoViewModel @Inject constructor(
     private val _getInfoById = MutableStateFlow<InfoEntity?>(null)
      val getInfoById: StateFlow<InfoEntity?> = _getInfoById
 
-    private fun fetchInfoById(infoId: Int){
+    fun fetchInfoById(infoId: Int){
         viewModelScope.launch {
             val info = infoRepository.getInfoByInfoId(infoId)
             _getInfoById.value = info
